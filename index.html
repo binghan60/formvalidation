@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <style>
+    * {
+      margin: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-size: 2rem;
+    }
+    .title {
+      text-align: center;
+      letter-spacing: 0.5rem;
+      font-size: 1.75rem;
+      line-height: 3rem;
+    }
+    .center {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .payment {
+      display: flex;
+      flex-wrap: wrap;
+    }
+    .payment .checkBox {
+      width: 50%;
+    }
+    .select {
+      font-size: 1.75rem;
+      width: 50%;
+      height: 50px;
+    }
+    .genderAge {
+      display: flex;
+    }
+    .centerAlign input {
+      padding: 5px;
+      vertical-align: middle;
+    }
+    label {
+      vertical-align: middle;
+      display: inline-block;
+    }
+    .centerAlign {
+      line-height: 2;
+    }
+    button {
+      font-size: 2rem;
+      background: transparent;
+      width: 180px;
+      height: 70px;
+    }
+    .errorMessage {
+      text-align: center;
+      color: red;
+      line-height: 1;
+      padding: 30px;
+    }
+    .pt {
+      padding-top: 1rem;
+    }
+    #result {
+      font-size: 2.25rem;
+    }
+    #result > div {
+      line-height: 2;
+    }
+  </style>
+  <body>
+    <form action="" id="form">
+      <div class="title"><span>時間</span><span class="time"></span></div>
+      <div>
+        <label>付款方式:</label>
+        <div class="payment">
+          <div class="checkBox">
+            <label
+              ><input
+                type="checkbox"
+                id="creditCard"
+                name="creditCard"
+                value="信用卡"
+                style="width: 30px; height: 30px"
+              />信用卡</label
+            >
+          </div>
+
+          <div class="checkBox">
+            <label
+              ><input
+                type="checkbox"
+                id="linePay"
+                name="linePay"
+                value="LINE PAY"
+                style="width: 30px; height: 30px"
+              />LINE PAY</label
+            >
+          </div>
+
+          <div class="checkBox">
+            <label
+              ><input
+                type="checkbox"
+                id="jkos"
+                name="jkos"
+                value="街口支付"
+                style="width: 30px; height: 30px"
+              />街口</label
+            >
+          </div>
+
+          <div class="checkBox">
+            <label
+              ><input
+                type="checkbox"
+                id="ATM"
+                name="ATM"
+                value="ATM轉帳"
+                style="width: 30px; height: 30px"
+              />ATM
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="genderAge pt">
+        <select class="select" name="gender" id="gender">
+          <option value="" disabled selected>性別</option>
+          <option value="男" name="male">男</option>
+          <option value="女" name="female">女</option>
+        </select>
+        <select class="select" name="age" id="age">
+          <option value="" disabled selected>年齡</option>
+        </select>
+      </div>
+      <div class="centerAlign pt">
+        <label for="username">名稱</label>
+        <input id="username" name="username" type="text" />
+      </div>
+      <div class="centerAlign">
+        <label for="phone">電話</label>
+        <input id="phone" name="phone" type="text" />
+      </div>
+      <div class="center checkBox pt">
+        <input
+          id="agree"
+          name="agree"
+          type="checkbox"
+          style="width: 30px; height: 30px"
+        />
+        <label for="agree">我同意隱私條款</label>
+      </div>
+      <div>
+        <p class="errorMessage"></p>
+      </div>
+      <div class="title">
+        <button>去抽獎</button>
+      </div>
+    </form>
+    <div id="result" style="display: none">
+      <div class="pt">姓名:<span class="secName"></span></div>
+      <div class="pt">電話:<span class="secPhone"></span></div>
+      <div class="pt">性別:<span class="secGender"></span></div>
+      <div class="pt">年齡:<span class="secAge"></span></div>
+      <div class="pt">
+        付款方式:
+        <p class="secPayment"></p>
+      </div>
+    </div>
+
+    <script>
+      getTime(); //取得現在時間
+      function getTime() {
+        const time = document.querySelector(".time");
+        const today = new Date();
+        time.innerHTML =
+          today.getFullYear() +
+          "年" +
+          (today.getMonth() + 1) +
+          "月" +
+          today.getDate() +
+          "日";
+      }
+      const form = document.querySelector("#form");
+      const errorMessage = document.querySelector(".errorMessage");
+      const agree = document.querySelector("#agree");
+      const username = document.querySelector("#username");
+      const phone = document.querySelector("#phone");
+      const gender = document.querySelector("#gender");
+      const creditCard = document.querySelector("#creditCard");
+      const linePay = document.querySelector("#linePay");
+      const jkos = document.querySelector("#jkos");
+      const ATM = document.querySelector("#ATM");
+      const age = document.querySelector("#age");
+      //動態生成選單
+      function produceOption() {
+        for (let i = 20; i <= 50; i++) {
+          const option = document.createElement("option");
+          age.add(option);
+          option.text = i;
+          option.value = i;
+        }
+      }
+      produceOption();
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        errorMessage.innerHTML = "";
+
+        //付款方式驗證
+        if (
+          !creditCard.checked &&
+          !linePay.checked &&
+          !jkos.checked &&
+          !ATM.checked
+        ) {
+          errorMessage.innerHTML = "請選擇至少一種付款方式";
+          return;
+        }
+        //性別驗證
+        if (gender.value === "" || gender.value === null) {
+          errorMessage.innerHTML = "性別為必選欄位";
+          return;
+        }
+
+        //年齡
+        if (age.value === 0 || age.value === "") {
+          errorMessage.innerHTML = "年齡為必選欄位";
+          return;
+        }
+
+        //姓名驗證
+        const chineseRegex = /^[\u4E00-\u9FA5]+$/;
+        if (
+          username.value.trim() === "" ||
+          username.value.trim() == null ||
+          !username.value.trim().match(chineseRegex)
+        ) {
+          errorMessage.innerHTML = "姓名為必填欄位且為中文";
+          return;
+        }
+
+        //手機驗證
+        const phoneRegex = /[0-9]{8}$/;
+        if (
+          phone.value.trim().length < 10 ||
+          phone.value.trim().length <= 9 ||
+          !phone.value.trim().match(phoneRegex)
+        ) {
+          errorMessage.innerHTML = "請符合手機號碼格式";
+          return;
+        }
+        //Agree驗證
+        if (!agree.checked) {
+          errorMessage.innerHTML = "必須同意隱私條款方能參加抽獎";
+          return;
+        }
+
+        //-------------------------------------------------------------------------
+
+        const secUsername = document.querySelector(".secName");
+        const secPhone = document.querySelector(".secPhone");
+        const secGender = document.querySelector(".secGender");
+        const secAge = document.querySelector(".secAge");
+        const secPayment = document.querySelector(".secPayment");
+        secUsername.innerHTML = username.value;
+        secPhone.innerHTML = phone.value;
+        secGender.innerHTML = gender.value;
+        secAge.innerHTML = age.value;
+
+        const creditCardText = creditCard.checked ? creditCard.value + "," : "";
+        const linePayText = linePay.checked ? linePay.value + "," : "";
+        const jkosText = jkos.checked ? jkos.value + "," : "";
+        const ATMText = ATM.checked ? ATM.value : "";
+        const word = creditCardText + linePayText + jkosText + ATMText;
+        secPayment.innerHTML = word;
+
+        form.style.display = "none";
+        const result = document.querySelector("#result");
+        form.style.display = "none";
+        result.style.display = "block";
+      });
+    </script>
+  </body>
+</html>
