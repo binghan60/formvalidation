@@ -174,8 +174,8 @@
     </div>
 
     <script>
-      getTime(); //取得現在時間
-      function getTime() {
+      //取得現在時間
+      (function getTime() {
         const time = document.querySelector(".time");
         const today = new Date();
         time.innerHTML =
@@ -185,7 +185,7 @@
           "月" +
           today.getDate() +
           "日";
-      }
+      })();
       const form = document.querySelector("#form");
       const errorMessage = document.querySelector(".errorMessage");
       const agree = document.querySelector("#agree");
@@ -198,15 +198,14 @@
       const ATM = document.querySelector("#ATM");
       const age = document.querySelector("#age");
       //動態生成選單
-      function produceOption() {
+      (function produceOption() {
         for (let i = 20; i <= 50; i++) {
           const option = document.createElement("option");
           age.add(option);
           option.text = i;
           option.value = i;
         }
-      }
-      produceOption();
+      })();
 
       form.addEventListener("submit", (e) => {
         e.preventDefault();
